@@ -18,6 +18,23 @@
     url("https://db.onlinewebfonts.com/t/4eb2b5183a93d5d96f28e09ae20c57a6.svg#F(MyE)Wild Words")format("svg");
 }
 
+body {
+    background-color: #e0e5ec; 
+    margin: 0;
+    padding: 40px 20px;
+}
+
+.paper-container {
+    background-color: #ffffff;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+    
+    box-shadow: 0 10px 20px rgba(0,0,0,0.15), 0 6px 6px rgba(0,0,0,0.10);
+    
+    border: 3px solid black; 
+}
+
 header, section, footer{
     border: 3px solid black;
     padding: 10px;
