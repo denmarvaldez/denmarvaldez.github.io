@@ -136,3 +136,14 @@ footer ul:last-child li {
     height: 20px;
     object-fit: contain; 
 }
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    color: #555555;
+    
+    /* text-decoration: underline; */
+}
