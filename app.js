@@ -29,24 +29,40 @@ function initSisyphus8BitCanvas() {
   const height = canvas.height;
 
   const stars = [];
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 35; i++) {
     stars.push({
       x: Math.random() * width,
-      y: Math.random() * (height * 0.6),
+      y: Math.random() * (height * 0.65),
       size: Math.random() > 0.8 ? 2 : 1,
       blinkRate: Math.random() * 0.05 + 0.01,
       alpha: Math.random()
     });
   }
 
-  let pushProgress = 0;
+  // State machine: 'PUSHING' | 'ROLLING_BACK' | 'WALKING_DOWN'
+  let animState = 'PUSHING';
+  let sisyphusProgress = 0.10;
+  let boulderProgress = 0.10;
   let walkCycle = 0;
   let boulderAngle = 0;
 
-  const startX = 20;
-  const startY = height - 30;
-  const endX = width - 40;
+  // Mountain slope geometry
+  const startX = 10;
+  const startY = height - 40;
+  const endX = width - 30;
   const endY = 40;
+
+  const dx = endX - startX;
+  const dy = endY - startY;
+  const slopeAngle = Math.atan2(dy, dx);
+
+  // Perpendicular unit vector pointing UP above mountain slope into sky
+  const nx = Math.sin(slopeAngle);   // negative
+  const ny = -Math.cos(slopeAngle);  // negative (upward in canvas coordinates)
+
+  // Tangent unit vector pointing ALONG mountain slope
+  const tx = Math.cos(slopeAngle);   // positive
+  const ty = Math.sin(slopeAngle);   // negative
 
   function drawPixelRect(x, y, w, h, color) {
     ctx.fillStyle = color;
@@ -56,8 +72,10 @@ function initSisyphus8BitCanvas() {
   function renderFrame() {
     ctx.clearRect(0, 0, width, height);
 
+    // 1. Dark sky background
     drawPixelRect(0, 0, width, height, '#050505');
 
+    // 2. Pixel stars
     stars.forEach(s => {
       s.alpha += s.blinkRate;
       if (s.alpha > 1 || s.alpha < 0.2) s.blinkRate = -s.blinkRate;
@@ -65,7 +83,8 @@ function initSisyphus8BitCanvas() {
       ctx.fillRect(Math.floor(s.x), Math.floor(s.y), s.size, s.size);
     });
 
-    ctx.fillStyle = '#101010';
+    // 3. Mountain Body under slope
+    ctx.fillStyle = '#0d0d0d';
     ctx.beginPath();
     ctx.moveTo(startX, startY);
     ctx.lineTo(endX, endY);
@@ -74,6 +93,7 @@ function initSisyphus8BitCanvas() {
     ctx.closePath();
     ctx.fill();
 
+    // Mountain slope crisp pixel surface line
     ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = 3;
     ctx.beginPath();
@@ -82,51 +102,147 @@ function initSisyphus8BitCanvas() {
     ctx.lineTo(endX, endY);
     ctx.stroke();
 
+    // Greek meander base detail
     for (let x = 0; x < width; x += 16) {
-      drawPixelRect(x, height - 12, 16, 2, '#333333');
-      if (x % 32 === 0) {
-        drawPixelRect(x + 4, height - 10, 4, 8, '#222222');
+      drawPixelRect(x, height - 10, 16, 2, '#222222');
+    }
+
+    // 4. Update State Machine
+    if (animState === 'PUSHING') {
+      sisyphusProgress += 0.0008;
+      boulderProgress = sisyphusProgress;
+      walkCycle += 0.06;
+      boulderAngle += 0.015;
+
+      if (sisyphusProgress >= 0.80) {
+        animState = 'ROLLING_BACK';
+      }
+    } 
+    else if (animState === 'ROLLING_BACK') {
+      // Boulder rolls down fast
+      boulderProgress -= 0.006;
+      boulderAngle -= 0.08;
+      sisyphusProgress = 0.80;
+
+      if (boulderProgress <= 0.10) {
+        boulderProgress = 0.10;
+        animState = 'WALKING_DOWN';
+      }
+    } 
+    else if (animState === 'WALKING_DOWN') {
+      // Sisyphus walks back down the mountain to meet the boulder
+      sisyphusProgress -= 0.002;
+      walkCycle += 0.08;
+
+      if (sisyphusProgress <= 0.10) {
+        sisyphusProgress = 0.10;
+        animState = 'PUSHING';
       }
     }
 
-    pushProgress += 0.003;
-    if (pushProgress > 0.85) {
-      pushProgress = 0.15;
+    // Feet contact point of Sisyphus on the mountain slope line
+    const sisyphusFeetX = startX + dx * sisyphusProgress;
+    const sisyphusFeetY = startY + dy * sisyphusProgress;
+
+    // Boulder contact point on the mountain slope
+    const boulderRadius = 20;
+    const boulderContactX = startX + dx * boulderProgress + (animState === 'PUSHING' ? 34 * tx : 0);
+    const boulderContactY = startY + dy * boulderProgress + (animState === 'PUSHING' ? 34 * ty : 0);
+
+    const boulderCenterX = boulderContactX + boulderRadius * nx;
+    const boulderCenterY = boulderContactY + boulderRadius * ny;
+
+    // 5. Draw Human 8-Bit Sisyphus Figure
+    if (animState === 'PUSHING') {
+      ctx.save();
+      ctx.translate(sisyphusFeetX, sisyphusFeetY);
+      ctx.rotate(slopeAngle);
+
+      // In local coordinates:
+      // x > 0 is up the hill (towards boulder)
+      // y = 0 is the mountain slope line
+      // y < 0 is the sky above the mountain slope
+      const legStep = Math.sin(walkCycle) * 3;
+
+      // 1. FEET & SANDALS (Planted firmly on mountain line y = 0)
+      // Rear Foot & Leg
+      drawPixelRect(-8 + legStep, -8, 4, 8, '#aaaaaa');
+      drawPixelRect(-9 + legStep, -2, 5, 2, '#333333'); // Sandal sole
+
+      // Front Foot & Leg (braced pushing)
+      drawPixelRect(2 - legStep, -8, 4, 8, '#ffffff');
+      drawPixelRect(1 - legStep, -2, 5, 2, '#333333'); // Sandal sole
+
+      // 2. HIPS & TUNIC CLOTH
+      drawPixelRect(-4, -13, 10, 5, '#333333');
+      drawPixelRect(-3, -12, 8, 3, '#666666'); // Belt
+
+      // 3. MUSCULAR TORSO (Leaning 35° forward pushing rock)
+      drawPixelRect(-2, -21, 9, 9, '#dddddd'); // Back & spine
+      drawPixelRect(2, -20, 7, 7, '#ffffff');  // Chest
+
+      // 4. NECK & HEAD (Tilted forward with hair & beard)
+      drawPixelRect(6, -26, 6, 6, '#ffffff');  // Face
+      drawPixelRect(4, -27, 5, 5, '#111111');  // Hair
+      drawPixelRect(10, -24, 3, 3, '#333333'); // Beard
+
+      // 5. ARMS & HANDS (Extending forward & pushing boulder)
+      drawPixelRect(4, -20, 5, 5, '#cccccc');  // Shoulder
+      drawPixelRect(8, -19, 14, 4, '#ffffff'); // Extended arm
+      drawPixelRect(21, -21, 3, 8, '#ffffff'); // Hands gripping rock
+
+      ctx.restore();
+    } 
+    else if (animState === 'ROLLING_BACK') {
+      ctx.save();
+      ctx.translate(sisyphusFeetX, sisyphusFeetY);
+      ctx.rotate(slopeAngle);
+
+      // Standing tall watching boulder roll down
+      drawPixelRect(-4, -12, 3, 12, '#cccccc');
+      drawPixelRect(1, -12, 3, 12, '#ffffff');
+      drawPixelRect(-5, -17, 9, 5, '#333333');
+      drawPixelRect(-4, -25, 8, 9, '#ffffff');
+      drawPixelRect(-4, -31, 6, 6, '#ffffff'); // Face
+      drawPixelRect(-6, -32, 5, 5, '#111111'); // Hair
+      drawPixelRect(-6, -22, 3, 7, '#cccccc'); // Hands on hips
+      drawPixelRect(3, -22, 3, 7, '#cccccc');
+
+      ctx.restore();
+    } 
+    else if (animState === 'WALKING_DOWN') {
+      ctx.save();
+      ctx.translate(sisyphusFeetX, sisyphusFeetY);
+      ctx.rotate(slopeAngle);
+
+      const legAnim = Math.sin(walkCycle) * 3;
+      // Walking down mountain calmly
+      drawPixelRect(-4 + legAnim, -12, 4, 12, '#ffffff');
+      drawPixelRect(2 - legAnim, -12, 4, 12, '#aaaaaa');
+      drawPixelRect(-4, -17, 8, 5, '#333333');
+      drawPixelRect(-4, -25, 8, 9, '#dddddd');
+      drawPixelRect(-4, -31, 6, 6, '#ffffff'); // Face
+      drawPixelRect(-2, -33, 5, 4, '#111111'); // Hair
+      drawPixelRect(-7 + legAnim, -20, 3, 7, '#cccccc'); // Arms swinging
+      drawPixelRect(4 - legAnim, -20, 3, 7, '#cccccc');
+
+      ctx.restore();
     }
 
-    const currentX = startX + (endX - startX) * pushProgress;
-    const currentY = startY + (endY - startY) * pushProgress;
-
-    walkCycle += 0.15;
-    const legOffset = Math.sin(walkCycle) * 3;
-
-    const figureX = currentX - 16;
-    const figureY = currentY - 14;
-
-    drawPixelRect(figureX - 4, figureY - 16, 6, 6, '#ffffff');
-    drawPixelRect(figureX - 2, figureY - 10, 8, 8, '#dddddd');
-    drawPixelRect(figureX, figureY - 2, 6, 6, '#aaaaaa');
-    drawPixelRect(figureX + 4, figureY - 12, 10, 3, '#ffffff');
-    drawPixelRect(figureX + 6, figureY - 8, 8, 3, '#cccccc');
-    drawPixelRect(figureX - 2 + legOffset, figureY + 4, 3, 8, '#ffffff');
-    drawPixelRect(figureX + 4 - legOffset, figureY + 4, 3, 8, '#bbbbbb');
-
-    boulderAngle += 0.05;
-    const boulderRadius = 22;
-    const boulderCenterX = currentX + 16;
-    const boulderCenterY = currentY - 20;
-
+    // 6. Draw 8-Bit Pixel Boulder
     ctx.save();
     ctx.translate(boulderCenterX, boulderCenterY);
     ctx.rotate(boulderAngle);
 
-    drawPixelRect(-boulderRadius, -boulderRadius, boulderRadius * 2, boulderRadius * 2, '#222222');
-    drawPixelRect(-boulderRadius + 4, -boulderRadius + 4, boulderRadius * 2 - 8, boulderRadius * 2 - 8, '#ffffff');
+    // Boulder body
+    drawPixelRect(-boulderRadius, -boulderRadius, boulderRadius * 2, boulderRadius * 2, '#181818');
+    drawPixelRect(-boulderRadius + 3, -boulderRadius + 3, boulderRadius * 2 - 6, boulderRadius * 2 - 6, '#ffffff');
 
-    drawPixelRect(-10, -10, 8, 8, '#000000');
-    drawPixelRect(4, 2, 6, 10, '#333333');
-    drawPixelRect(-4, 6, 10, 5, '#000000');
-    drawPixelRect(2, -12, 7, 5, '#666666');
+    // Internal pixel textures
+    drawPixelRect(-9, -9, 7, 7, '#000000');
+    drawPixelRect(3, 2, 6, 9, '#333333');
+    drawPixelRect(-4, 5, 9, 4, '#000000');
+    drawPixelRect(2, -10, 6, 5, '#777777');
 
     ctx.restore();
 
