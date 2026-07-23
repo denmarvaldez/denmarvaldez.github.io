@@ -1,66 +1,293 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Denmar Valdez</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Denmar Valdez | CS Student • Aspiring Data Scientist</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="Personal portfolio of Denmar Valdez, Computer Science Student & Aspiring Data Scientist exploring data pipelines, machine learning, absurdism, music, and anime.">
+  <meta name="author" content="Denmar Valdez">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Denmar Valdez | CS Student • Aspiring Data Scientist">
+  <meta property="og:description" content="Computer Science Student & Aspiring Data Scientist. Pushing pixel boulders up digital mountains.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://denmarvaldez.github.io/">
+
+  <!-- FontAwesome Retro Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="paper-container">
-        <header>
-            <h1><a href="/">DENMAR VALDEZ</a></h1>
-            <nav>
-                <ul>
-                    <li><a href="/about/">About</a></li>
-                    <li><a href="/life/">Life</a></li>
-                    <li><a href="/projects/">Projects</a></li>
-                    <li><a href="/blogs/">Blogs</a></li>
-                </ul>
-            </nav>
-        </header>
-        <div class="panel-container">
-            <aside>
-            <img src="assets/images/profile.jpg" alt="">
-            <section>
-                <h1>Recent Posts</h1>
-            </section>
-            </aside>
-            <main>
-                <section>
-                    <p>Hey there! I am Denmar Valdez and welcome to my personal website.
 
-                        I am currently a 3rd year student at the Polytechnic University of the Philippines studying computer science.
+  <!-- Retro CRT Scanline Overlay -->
+  <div class="scanlines"></div>
 
-                        I'm currently interested in data science, machine learning, deep learning, LLMs, and natural language processing.
+  <!-- Header Navigation -->
+  <header class="header">
+    <div class="container header-container">
+      <a href="#hero" class="logo" id="nav-logo">
+        <span class="logo-pixel-blink"></span> DENMAR.VALDEZ
+      </a>
 
-                        If you are interested in connecting with me, feel free to reach out in any of my contacts below.
-                    </p>
-                </section>
-                <section>
-                    <h1>Projects</h1>
-                </section>
-            </main>
-        </div>
-        <footer>
-            <ul>
-                <li>© Denmar Valdez</li>
-                <li>denmarvaldez@gmail.com</li>
-            </ul>
+      <nav class="nav-menu" id="nav-menu">
+        <a href="#hero" class="nav-link active">MAIN</a>
+        <a href="#projects" class="nav-link">WORKS</a>
+        <a href="#blogs" class="nav-link">ABSURDISM</a>
+        <a href="#timeline" class="nav-link">LOGS</a>
+        <a href="#sanctum" class="nav-link">SANCTUM</a>
+        <a href="#contact" class="nav-link">CONTRACT</a>
+      </nav>
 
-            <section class="footer-section">Just a personal library of thoughts and things I created.</section>
-
-            <ul>
-                <li>
-                    Github
-                    <img class = "github" src="assets/images/github_logo.png" alt="">
-                </li>
-                <li>
-                    LinkedIn
-                    <img class = "linkedin" src="assets/images/linkedin_logo.png" alt="">
-                </li>
-            </ul>  
-        </footer>
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <a href="#contact" class="btn-pixel-primary">
+          <i class="fa-solid fa-terminal"></i> CONTRACT
+        </a>
+        <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
     </div>
+  </header>
+
+  <!-- Hero Section with 8-Bit Sisyphus Animation -->
+  <section class="hero" id="hero">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <div class="hero-tag">
+          <i class="fa-solid fa-graduation-cap"></i> CS STUDENT • ASPIRING DATA SCIENTIST
+        </div>
+        <h1 class="hero-title">
+          DENMAR <span class="text-pixel-accent">VALDEZ</span>
+        </h1>
+        <p class="hero-subtitle" id="hero-bio">
+          Pushing pixel boulders up digital mountains. Finding purpose, joy, and clean software architecture in an absurd universe.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#projects" class="btn-pixel-primary">
+            VIEW WORKS <i class="fa-solid fa-play"></i>
+          </a>
+          <a href="#contact" class="btn-pixel-outline">
+            CONNECT
+          </a>
+        </div>
+
+        <!-- Social Icons Row -->
+        <div style="display: flex; gap: 12px;" id="social-links-hero">
+          <!-- Rendered by JS -->
+        </div>
+      </div>
+
+      <!-- Sisyphus 8-Bit Canvas Container -->
+      <div class="sisyphus-canvas-container">
+        <div class="sisyphus-canvas-header">
+          <span><i class="fa-solid fa-gamepad"></i> SISYPHUS.EXE [RUNNING...]</span>
+          <span style="color: var(--accent-crimson);">8-BIT ENGINE</span>
+        </div>
+        
+        <!-- 8-Bit Animated Canvas -->
+        <canvas id="sisyphus-canvas" width="400" height="260"></canvas>
+
+        <!-- Absurdism Quote Box -->
+        <div class="quote-pixel-card" id="quote-card">
+          <div class="quote-pixel-text" id="quote-text">"Loading quote..."</div>
+          <span class="quote-pixel-author" id="quote-author"></span>
+          <button class="quote-refresh-btn-pixel" id="refresh-quote-btn">
+            <i class="fa-solid fa-rotate"></i> RE-ROLL QUOTE
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Projects Section -->
+  <section class="section-padding" id="projects">
+    <div class="container">
+      <h2 class="section-title">
+        <span class="accent-symbol">[01]</span> PROJECTS & WORKS
+      </h2>
+      <p class="section-subtitle">
+        Sisyphean software builds, stream processing engines, and pixel experiments.
+      </p>
+
+      <!-- Category Filter Tabs -->
+      <div class="filter-tabs" id="project-filters">
+        <button class="filter-btn active" data-filter="all">ALL WORKS</button>
+        <button class="filter-btn" data-filter="web">WEB SYSTEMS</button>
+        <button class="filter-btn" data-filter="ai">AI & DATA</button>
+        <button class="filter-btn" data-filter="design">RETRO DESIGN</button>
+      </div>
+
+      <!-- Projects Grid -->
+      <div class="projects-grid" id="projects-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Blogs & Absurdism Essays Section -->
+  <section class="section-padding" id="blogs">
+    <div class="container">
+      <h2 class="section-title">
+        <span class="accent-symbol">[02]</span> ABSURDISM & ESSAYS
+      </h2>
+      <p class="section-subtitle">
+        Reflections on Albert Camus, Sisyphean engineering, and creating meaning in code.
+      </p>
+
+      <div class="search-bar">
+        <input type="text" class="search-input" id="blog-search" placeholder="Search absurdism essays...">
+      </div>
+
+      <div class="blog-grid" id="blog-grid">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Life Documentation & Timeline Section -->
+  <section class="section-padding" id="timeline">
+    <div class="container">
+      <h2 class="section-title">
+        <span class="accent-symbol">[03]</span> SISYPHEAN LOGS
+      </h2>
+      <p class="section-subtitle">
+        Timeline documentation of major milestones, engineering research, and philosophical growth.
+      </p>
+
+      <div class="timeline-retro" id="timeline-container">
+        <!-- Rendered by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Sanctum (Music, Gaming, Anime) Section -->
+  <section class="section-padding" id="sanctum">
+    <div class="container">
+      <h2 class="section-title">
+        <span class="accent-symbol">[04]</span> THE SANCTUM
+      </h2>
+      <p class="section-subtitle">
+        My retro sanctum: 8-bit synth soundscapes, philosophical RPGs, and anime sagas.
+      </p>
+
+      <div class="sanctum-grid">
+        <!-- Music Sanctum Card -->
+        <div class="sanctum-pixel-card">
+          <h3 class="sanctum-header-pixel">
+            <i class="fa-brands fa-spotify" style="color: var(--accent-green);"></i> MUSIC SANCTUM
+          </h3>
+
+          <div class="spotify-pixel-box" id="spotify-embed-box">
+            <!-- Rendered by JS -->
+          </div>
+
+          <h4 style="font-family: var(--font-pixel-heading); font-size: 0.65rem; margin: 14px 0 10px 0;">RECOMMENDED TRACKS</h4>
+          <div id="track-list">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Gaming Corner Card -->
+        <div class="sanctum-pixel-card">
+          <h3 class="sanctum-header-pixel">
+            <i class="fa-solid fa-gamepad" style="color: var(--accent-amber);"></i> GAMING CORNER
+          </h3>
+          <div id="gaming-list">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Anime Vault Card -->
+        <div class="sanctum-pixel-card">
+          <h3 class="sanctum-header-pixel">
+            <i class="fa-solid fa-tv" style="color: var(--accent-cyan);"></i> ANIME VAULT
+          </h3>
+          <div id="anime-list">
+            <!-- Rendered by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact & Contract Hub Section -->
+  <section class="section-padding" id="contact">
+    <div class="container">
+      <h2 class="section-title">
+        <span class="accent-symbol">[05]</span> CONTRACT & CONNECT
+      </h2>
+      <p class="section-subtitle">
+        Ready to contract me for software engineering, open source, or talk Absurdism? Reach out.
+      </p>
+
+      <div class="contact-grid">
+        <div class="contact-pixel-card">
+          <h3 style="font-family: var(--font-pixel-heading); font-size: 1rem; margin-bottom: 14px;">DIRECT CHANNELS</h3>
+          <div id="contact-handles-list">
+            <!-- Rendered by JS -->
+          </div>
+
+          <button class="btn-pixel-outline" id="copy-email-btn" style="width: 100%; justify-content: center; margin-top: 10px;">
+            <i class="fa-regular fa-copy"></i> COPY EMAIL (denmarvaldez@gmail.com)
+          </button>
+        </div>
+
+        <div class="contact-pixel-card">
+          <h3 style="font-family: var(--font-pixel-heading); font-size: 1rem; margin-bottom: 16px;">SEND MESSAGE</h3>
+          <form id="contact-form">
+            <div class="form-group">
+              <label class="form-label-pixel" for="form-name">YOUR NAME</label>
+              <input type="text" id="form-name" class="form-input-pixel" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label-pixel" for="form-email">YOUR EMAIL</label>
+              <input type="email" id="form-email" class="form-input-pixel" placeholder="john@example.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label-pixel" for="form-message">MESSAGE</label>
+              <textarea id="form-message" class="form-textarea-pixel" rows="4" placeholder="Describe contract details or inquiry..." required></textarea>
+            </div>
+            <button type="submit" class="btn-pixel-primary" style="width: 100%; justify-content: center;">
+              <i class="fa-solid fa-paper-plane"></i> TRANSMIT MESSAGE
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer-retro">
+    <div class="container" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+      <div>
+        <p>&copy; <span id="footer-year">2026</span> DENMAR VALDEZ. ALL RIGHTS RESERVED.</p>
+      </div>
+      <div>
+        " ONE MUST IMAGINE SISYPHUS HAPPY. "
+      </div>
+    </div>
+  </footer>
+
+  <!-- Article Reader Modal -->
+  <div class="modal-overlay" id="article-modal">
+    <div class="modal-pixel-container">
+      <button class="modal-close-pixel" id="close-modal-btn">CLOSE [X]</button>
+      <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div class="toast-pixel" id="toast">
+    <span id="toast-message">EMAIL COPIED!</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="data.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
