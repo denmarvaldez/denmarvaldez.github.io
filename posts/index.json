@@ -1,0 +1,16 @@
+[
+  {
+    "id": "first-blog",
+    "file": "first-blog.md",
+    "title": "First Blog",
+    "date": "July 23, 2026",
+    "readTime": "2 min read",
+    "category": "Thoughts",
+    "tags": [
+      "Musings",
+      "Thoughts",
+      "Personal"
+    ],
+    "snippet": "This is my first blog on my personal website. It's a place for me to share my thoughts and ideas, and I hope you enjoy reading them."
+  }
+]

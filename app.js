@@ -10,7 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initSocialLinks();
   initProjects();
   initBlogs();
-  initTimeline();
   initSanctum();
   initContactHub();
   initArticleModal();
@@ -117,7 +116,7 @@ function initSisyphus8BitCanvas() {
       if (sisyphusProgress >= 0.80) {
         animState = 'ROLLING_BACK';
       }
-    } 
+    }
     else if (animState === 'ROLLING_BACK') {
       // Boulder rolls down fast
       boulderProgress -= 0.006;
@@ -128,7 +127,7 @@ function initSisyphus8BitCanvas() {
         boulderProgress = 0.10;
         animState = 'WALKING_DOWN';
       }
-    } 
+    }
     else if (animState === 'WALKING_DOWN') {
       // Sisyphus walks back down the mountain to meet the boulder
       sisyphusProgress -= 0.002;
@@ -192,7 +191,7 @@ function initSisyphus8BitCanvas() {
       drawPixelRect(21, -21, 3, 8, '#ffffff'); // Hands gripping rock
 
       ctx.restore();
-    } 
+    }
     else if (animState === 'ROLLING_BACK') {
       ctx.save();
       ctx.translate(sisyphusFeetX, sisyphusFeetY);
@@ -209,7 +208,7 @@ function initSisyphus8BitCanvas() {
       drawPixelRect(3, -22, 3, 7, '#cccccc');
 
       ctx.restore();
-    } 
+    }
     else if (animState === 'WALKING_DOWN') {
       ctx.save();
       ctx.translate(sisyphusFeetX, sisyphusFeetY);
@@ -365,29 +364,36 @@ function initProjects() {
   if (!grid) return;
 
   function renderProjects(filter = 'all') {
-    const filtered = filter === 'all' 
-      ? DATA.projects 
+    const filtered = filter === 'all'
+      ? DATA.projects
       : DATA.projects.filter(p => p.category === filter);
 
+    if (filtered.length === 0) {
+      grid.innerHTML = `<div class="col-12"><p style="color: var(--text-muted);">No projects found in this category.</p></div>`;
+      return;
+    }
+
     grid.innerHTML = filtered.map(p => `
-      <div class="pixel-card">
-        <div>
-          <span class="pixel-badge">${p.badge}</span>
-          <h3 class="project-title">${p.title}</h3>
-          <p class="project-desc">${p.description}</p>
-          <div class="project-tags">
-            ${p.tags.map(t => `<span class="pixel-tag">${t}</span>`).join('')}
+      <div class="col-12 col-md-6 col-lg-6">
+        <div class="pixel-card h-100 d-flex flex-column justify-content-between">
+          <div>
+            <span class="pixel-badge">${p.badge}</span>
+            <h3 class="project-title">${p.title}</h3>
+            <p class="project-desc">${p.description}</p>
+            <div class="project-tags">
+              ${p.tags.map(t => `<span class="pixel-tag">${t}</span>`).join('')}
+            </div>
           </div>
-        </div>
-        <div class="pixel-card-footer">
-          <a href="${p.githubUrl}" target="_blank" rel="noopener noreferrer" class="pixel-link">
-            <i class="fa-brands fa-github"></i> GITHUB REPO
-          </a>
-          ${p.liveUrl && p.liveUrl !== '#' ? `
-            <a href="${p.liveUrl}" target="_blank" rel="noopener noreferrer" class="pixel-link" style="color: var(--accent-crimson);">
-              LIVE DEMO <i class="fa-solid fa-play" style="font-size: 0.65rem;"></i>
+          <div class="pixel-card-footer mt-3">
+            <a href="${p.githubUrl}" target="_blank" rel="noopener noreferrer" class="pixel-link">
+              <i class="fa-brands fa-github"></i> GITHUB REPO
             </a>
-          ` : ''}
+            ${p.liveUrl && p.liveUrl !== '#' ? `
+              <a href="${p.liveUrl}" target="_blank" rel="noopener noreferrer" class="pixel-link" style="color: var(--accent-crimson);">
+                LIVE DEMO <i class="fa-solid fa-play" style="font-size: 0.65rem;"></i>
+              </a>
+            ` : ''}
+          </div>
         </div>
       </div>
     `).join('');
@@ -405,37 +411,81 @@ function initProjects() {
 }
 
 /* ==========================================================================
-   6. Blogs & Absurdism Reader
+   6. Markdown Parser & Blog Engine
    ========================================================================== */
-function initBlogs() {
+let blogPostsStore = [];
+
+function renderSimpleMarkdown(mdText) {
+  if (!mdText) return '';
+  let html = mdText
+    .replace(/^### (.*$)/gim, '<h3 style="font-family: var(--font-heading); font-size: 1.15rem; margin: 18px 0 8px 0; color: var(--text-primary);">$1</h3>')
+    .replace(/^## (.*$)/gim, '<h2 style="font-family: var(--font-heading); font-size: 1.3rem; margin: 22px 0 10px 0; color: var(--text-primary); border-bottom: 1px solid var(--border-pixel-muted); padding-bottom: 4px;">$1</h2>')
+    .replace(/^# (.*$)/gim, '<h1 style="font-family: var(--font-heading); font-size: 1.5rem; margin: 24px 0 12px 0; color: var(--text-primary);">$1</h1>')
+    .replace(/^> (.*$)/gim, '<blockquote style="border-left: 3px solid var(--border-pixel); padding-left: 14px; margin: 16px 0; font-style: italic; color: #e0e0e0;">$1</blockquote>')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" target="_blank" class="pixel-link">$1</a>')
+    .replace(/^- (.*$)/gim, '<li style="margin-left: 20px; margin-bottom: 4px;">$1</li>');
+
+  return html.split('\n\n').map(p => {
+    p = p.trim();
+    if (!p) return '';
+    if (p.startsWith('<h') || p.startsWith('<blockquote') || p.startsWith('<li')) {
+      return p;
+    }
+    return `<p style="margin-bottom: 14px; line-height: 1.7;">${p}</p>`;
+  }).join('');
+}
+
+async function initBlogs() {
   const grid = document.getElementById('blog-grid');
   const searchInput = document.getElementById('blog-search');
 
   if (!grid) return;
 
+  try {
+    const res = await fetch('posts/index.json');
+    if (res.ok) {
+      blogPostsStore = await res.json();
+    } else {
+      blogPostsStore = DATA.blogs || [];
+    }
+  } catch (e) {
+    blogPostsStore = DATA.blogs || [];
+  }
+
   function renderBlogs(query = '') {
     const q = query.toLowerCase().trim();
-    const filtered = DATA.blogs.filter(b => {
+    const filtered = blogPostsStore.filter(b => {
       return b.title.toLowerCase().includes(q) ||
-             b.snippet.toLowerCase().includes(q) ||
-             b.tags.some(t => t.toLowerCase().includes(q));
+        b.snippet.toLowerCase().includes(q) ||
+        b.tags.some(t => t.toLowerCase().includes(q));
     });
 
+    if (filtered.length === 0) {
+      grid.innerHTML = `<div class="col-12"><p style="color: var(--text-muted);">No blog posts found matching "${query}".</p></div>`;
+      return;
+    }
+
     grid.innerHTML = filtered.map(b => `
-      <div class="blog-pixel-card" onclick="openArticleModal('${b.id}')">
-        <div class="blog-meta-pixel">
-          <span>${b.category}</span>
-          <span>${b.readTime}</span>
-        </div>
-        <h3 class="blog-title-pixel">${b.title}</h3>
-        <p class="blog-snippet-pixel">${b.snippet}</p>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div class="project-tags">
-            ${b.tags.map(t => `<span class="pixel-tag">${t}</span>`).join('')}
+      <div class="col-12 col-md-6 col-lg-4">
+        <div class="blog-pixel-card h-100 d-flex flex-column justify-content-between" onclick="openArticleModal('${b.id}')">
+          <div>
+            <div class="blog-meta-pixel mb-2">
+              <span>${b.category}</span>
+              <span>${b.readTime}</span>
+            </div>
+            <h3 class="blog-title-pixel">${b.title}</h3>
+            <p class="blog-snippet-pixel">${b.snippet}</p>
           </div>
-          <span style="font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem; color: var(--accent-crimson);">
-            READ ESSAY >
-          </span>
+          <div class="d-flex justify-content-between align-items-center mt-3">
+            <div class="project-tags">
+              ${b.tags.map(t => `<span class="pixel-tag">${t}</span>`).join('')}
+            </div>
+            <span style="font-family: var(--font-mono); font-weight: 700; font-size: 0.8rem; color: #ffffff;">
+              READ POST >
+            </span>
+          </div>
         </div>
       </div>
     `).join('');
@@ -453,7 +503,7 @@ function initBlogs() {
    ========================================================================== */
 function initTimeline() {
   const container = document.getElementById('timeline-container');
-  if (!container) return;
+  if (!container || !DATA.timeline) return;
 
   container.innerHTML = DATA.timeline.map(item => `
     <div class="timeline-retro-item">
@@ -473,8 +523,13 @@ function initTimeline() {
 function initSanctum() {
   const spotifyBox = document.getElementById('spotify-embed-box');
   if (spotifyBox && DATA.profile.spotifyPlaylist) {
+    const rawUrl = DATA.profile.spotifyPlaylist;
+    const embedUrl = rawUrl.includes('/embed/') ? rawUrl : rawUrl.replace('spotify.com/', 'spotify.com/embed/');
+    const directUrl = rawUrl.replace('/embed/', '/');
+
     spotifyBox.innerHTML = `
-      <iframe src="${DATA.profile.spotifyPlaylist}" 
+      <iframe style="border-radius: 8px;"
+              src="${embedUrl}" 
               width="100%" 
               height="152" 
               frameBorder="0" 
@@ -482,6 +537,11 @@ function initSanctum() {
               allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" 
               loading="lazy">
       </iframe>
+      <div style="margin-top: 10px; text-align: center;">
+        <a href="${directUrl}" target="_blank" rel="noopener noreferrer" class="pixel-link" style="font-size: 0.78rem; color: var(--accent-cyan);">
+          <i class="fa-brands fa-spotify"></i> OPEN IN SPOTIFY APP <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.65rem;"></i>
+        </a>
+      </div>
     `;
   }
 
@@ -499,11 +559,13 @@ function initSanctum() {
   if (gamingList && DATA.hobbies.gaming) {
     gamingList.innerHTML = DATA.hobbies.gaming.map(g => `
       <div class="retro-list-item">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-          <span style="font-family: var(--font-heading); font-size: 0.95rem; font-weight: 700;">${g.title}</span>
+        <div style="font-family: var(--font-heading); font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">
+          ${g.title}
+        </div>
+        <div class="mb-2">
           <span class="pixel-badge" style="margin: 0; font-size: 0.65rem;">${g.badge}</span>
         </div>
-        <div style="font-style: italic; font-size: 0.88rem; color: var(--text-secondary);">"${g.quote}"</div>
+        <div style="font-style: italic; font-size: 0.85rem; color: var(--text-secondary);">"${g.quote}"</div>
       </div>
     `).join('');
   }
@@ -512,11 +574,13 @@ function initSanctum() {
   if (animeList && DATA.hobbies.anime) {
     animeList.innerHTML = DATA.hobbies.anime.map(a => `
       <div class="retro-list-item">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
-          <span style="font-family: var(--font-heading); font-size: 0.95rem; font-weight: 700;">${a.title}</span>
-          <span style="font-family: var(--font-mono); font-size: 0.72rem; font-weight: 700; color: var(--accent-crimson);">${a.tag}</span>
+        <div style="font-family: var(--font-heading); font-size: 0.95rem; font-weight: 700; color: var(--text-primary); margin-bottom: 4px;">
+          ${a.title}
         </div>
-        <div style="font-size: 0.88rem; color: var(--text-secondary); margin-top: 2px;">${a.note}</div>
+        <div class="mb-2">
+          <span class="pixel-badge" style="margin: 0; font-size: 0.65rem;">${a.tag}</span>
+        </div>
+        <div style="font-style: italic; font-size: 0.85rem; color: var(--text-secondary);">${a.note}</div>
       </div>
     `).join('');
   }
@@ -608,24 +672,38 @@ function initArticleModal() {
   }
 }
 
-function openArticleModal(blogId) {
-  const blog = DATA.blogs.find(b => b.id === blogId);
+async function openArticleModal(blogId) {
+  const blog = blogPostsStore.find(b => b.id === blogId) || (DATA.blogs && DATA.blogs.find(b => b.id === blogId));
   const modal = document.getElementById('article-modal');
   const content = document.getElementById('modal-content');
 
   if (!blog || !modal || !content) return;
 
+  let bodyHtml = blog.content || '';
+
+  if (blog.file) {
+    try {
+      const res = await fetch(`posts/${blog.file}`);
+      if (res.ok) {
+        const mdText = await res.text();
+        bodyHtml = renderSimpleMarkdown(mdText);
+      }
+    } catch (e) {
+      console.error('Failed to load markdown post file:', e);
+    }
+  }
+
   content.innerHTML = `
-    <div style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: var(--accent-crimson); margin-bottom: 12px;">
+    <div style="font-family: var(--font-mono); font-size: 0.8rem; font-weight: 700; color: var(--accent-cyan); margin-bottom: 12px;">
       ${blog.category} // ${blog.date} // ${blog.readTime}
     </div>
     <h2 style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 800; margin-bottom: 20px; color: var(--text-primary); line-height: 1.35;">
       ${blog.title}
     </h2>
     <div style="font-family: var(--font-body); font-size: 1rem; color: var(--text-secondary); line-height: 1.75;">
-      ${blog.content}
+      ${bodyHtml}
     </div>
-    <div style="margin-top: 24px; padding-top: 16px; border-top: 2px solid var(--border-pixel-muted); display: flex; gap: 8px;">
+    <div style="margin-top: 24px; padding-top: 16px; border-top: 2px solid var(--border-pixel-muted); display: flex; gap: 8px; flex-wrap: wrap;">
       ${blog.tags.map(t => `<span class="pixel-tag">${t}</span>`).join('')}
     </div>
   `;
