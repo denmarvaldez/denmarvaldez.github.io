@@ -54,6 +54,9 @@
       </nav>
 
       <div class="header-actions">
+        <button class="btn-pixel-outline header-notify-btn me-2" id="header-notify-btn" title="Notify Me of New Blogs">
+          <i class="fa-solid fa-bell"></i> <span class="d-none d-sm-inline">NOTIFY</span>
+        </button>
         <a href="https://drive.google.com/file/d/1zkQVpFr8ml7LrfEZCIOmK-PqjIBGD9Fh/view?usp=sharing" target="_blank"
           rel="noopener noreferrer" class="btn-pixel-outline header-resume-btn">
           <i class="fa-solid fa-file-pdf"></i> RESUME
@@ -159,8 +162,13 @@
         Reflections on Albert Camus, Sisyphean engineering, and creating meaning in code.
       </p>
 
-      <div class="search-bar mb-4">
-        <input type="text" class="search-input" id="blog-search" placeholder="Search absurdism essays...">
+      <div class="d-flex flex-column flex-sm-row gap-3 mb-4 align-items-stretch align-items-sm-center">
+        <div class="search-bar flex-grow-1 m-0">
+          <input type="text" class="search-input" id="blog-search" placeholder="Search absurdism essays...">
+        </div>
+        <button class="btn-pixel-primary blog-notify-trigger" id="blog-notify-btn">
+          <i class="fa-solid fa-bell"></i> GET NOTIFIED
+        </button>
       </div>
 
       <div class="row g-4" id="blog-grid">
@@ -296,6 +304,85 @@
     <div class="modal-pixel-container">
       <button class="modal-close-pixel" id="close-modal-btn">CLOSE [X]</button>
       <div id="modal-content"></div>
+    </div>
+  </div>
+
+  <!-- Blog Notification Modal -->
+  <div class="modal-overlay" id="notify-modal">
+    <div class="modal-pixel-container notify-modal-container">
+      <button class="modal-close-pixel" id="close-notify-modal-btn">CLOSE [X]</button>
+
+      <div class="notify-modal-header mb-3">
+        <h2 class="notify-modal-title">
+          <i class="fa-solid fa-bell text-pixel-accent"></i> BLOG NOTIFICATION CENTER
+        </h2>
+        <p class="notify-modal-subtitle">
+          Never miss an essay on Sisyphean engineering, data science, or Camus. Select how you'd like to be notified:
+        </p>
+      </div>
+
+      <div class="notify-channels-grid">
+        <!-- Option 1: Email Newsletter Subscription -->
+        <div class="notify-channel-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h3 class="notify-channel-heading">
+              <i class="fa-solid fa-envelope" style="color: var(--accent-amber);"></i> 1. EMAIL ALERTS
+            </h3>
+            <span class="pixel-badge" id="notify-email-badge">INBOX DISPATCH</span>
+          </div>
+          <p class="notify-channel-desc">
+            Get instant email notifications directly in your inbox whenever a new blog post is published.
+          </p>
+          <form id="notify-email-form" class="mt-3">
+            <div class="form-group mb-2">
+              <input type="email" id="notify-email-input" class="form-input-pixel" placeholder="Enter your email address..." required>
+            </div>
+            <button type="submit" class="btn-pixel-primary w-100 justify-content-center" id="notify-email-submit-btn">
+              <i class="fa-solid fa-paper-plane"></i> SUBSCRIBE VIA EMAIL
+            </button>
+          </form>
+          <div id="notify-email-status" class="notify-status-msg mt-2" style="display: none;"></div>
+        </div>
+
+        <!-- Option 2: Browser Desktop Push Alerts -->
+        <div class="notify-channel-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h3 class="notify-channel-heading">
+              <i class="fa-solid fa-desktop" style="color: var(--accent-cyan);"></i> 2. BROWSER PUSH ALERTS
+            </h3>
+            <span class="pixel-badge" id="notify-browser-badge">DESKTOP ALERTS</span>
+          </div>
+          <p class="notify-channel-desc">
+            Receive native browser pop-up alerts on your device whenever new content drops. No email required.
+          </p>
+          <button type="button" class="btn-pixel-outline w-100 justify-content-center mt-3" id="notify-browser-btn">
+            <i class="fa-solid fa-bell"></i> ENABLE BROWSER ALERTS
+          </button>
+          <div id="notify-browser-status" class="notify-status-msg mt-2" style="display: none;"></div>
+        </div>
+
+        <!-- Option 3: RSS Feed Integration -->
+        <div class="notify-channel-card">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h3 class="notify-channel-heading">
+              <i class="fa-solid fa-rss" style="color: var(--accent-green);"></i> 3. RSS / ATOM FEED
+            </h3>
+            <span class="pixel-badge" id="notify-rss-badge">OPEN WEB RSS</span>
+          </div>
+          <p class="notify-channel-desc">
+            Add this blog directly to Feedly, NetNewsWire, Inoreader, or any custom RSS feed aggregator.
+          </p>
+          <div class="d-flex gap-2 mt-3 flex-wrap">
+            <button type="button" class="btn-pixel-outline flex-grow-1 justify-content-center" id="copy-rss-btn">
+              <i class="fa-regular fa-copy"></i> COPY RSS FEED URL
+            </button>
+            <a href="rss.xml" target="_blank" rel="noopener noreferrer" class="btn-pixel-primary justify-content-center">
+              <i class="fa-solid fa-arrow-up-right-from-square"></i> VIEW RSS
+            </a>
+          </div>
+          <div id="notify-rss-status" class="notify-status-msg mt-2" style="display: none;"></div>
+        </div>
+      </div>
     </div>
   </div>
 

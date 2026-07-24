@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSanctum();
   initContactHub();
   initArticleModal();
+  initBlogNotifications();
 });
 
 /* ==========================================================================
@@ -721,3 +722,168 @@ function showToast(msg) {
   toast.classList.add('show');
   setTimeout(() => toast.classList.remove('show'), 3000);
 }
+
+/* ==========================================================================
+   11. Blog Notification Controller (Email, Web Push, RSS)
+   ========================================================================== */
+function initBlogNotifications() {
+  const modal = document.getElementById('notify-modal');
+  const openBlogBtn = document.getElementById('blog-notify-btn');
+  const openHeaderBtn = document.getElementById('header-notify-btn');
+  const closeBtn = document.getElementById('close-notify-modal-btn');
+
+  const emailForm = document.getElementById('notify-email-form');
+  const emailInput = document.getElementById('notify-email-input');
+  const emailSubmitBtn = document.getElementById('notify-email-submit-btn');
+  const emailStatus = document.getElementById('notify-email-status');
+
+  const browserBtn = document.getElementById('notify-browser-btn');
+  const browserStatus = document.getElementById('notify-browser-status');
+
+  const copyRssBtn = document.getElementById('copy-rss-btn');
+  const rssStatus = document.getElementById('notify-rss-status');
+
+  if (!modal) return;
+
+  function openNotifyModal() {
+    modal.classList.add('active');
+    updateNotificationStates();
+  }
+
+  function closeNotifyModal() {
+    modal.classList.remove('active');
+  }
+
+  if (openBlogBtn) openBlogBtn.addEventListener('click', openNotifyModal);
+  if (openHeaderBtn) openHeaderBtn.addEventListener('click', openNotifyModal);
+  if (closeBtn) closeBtn.addEventListener('click', closeNotifyModal);
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeNotifyModal();
+  });
+
+  function updateNotificationStates() {
+    const savedEmail = localStorage.getItem('blog_subscribed_email');
+    if (savedEmail) {
+      if (emailInput && !emailInput.value) emailInput.value = savedEmail;
+      if (emailStatus) {
+        emailStatus.style.display = 'block';
+        emailStatus.className = 'notify-status-msg';
+        emailStatus.innerHTML = `<i class="fa-solid fa-check"></i> SUBSCRIBED WITH ${savedEmail}`;
+      }
+      if (emailSubmitBtn) {
+        emailSubmitBtn.innerHTML = `<i class="fa-solid fa-check"></i> UPDATE SUBSCRIPTION`;
+      }
+      updateTriggerButtons(true);
+    } else {
+      if (emailStatus) emailStatus.style.display = 'none';
+      if (emailSubmitBtn) {
+        emailSubmitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i> SUBSCRIBE VIA EMAIL`;
+      }
+    }
+
+    if ('Notification' in window) {
+      if (Notification.permission === 'granted') {
+        if (browserStatus) {
+          browserStatus.style.display = 'block';
+          browserStatus.className = 'notify-status-msg';
+          browserStatus.innerHTML = `<i class="fa-solid fa-check"></i> BROWSER ALERTS ENABLED`;
+        }
+        if (browserBtn) {
+          browserBtn.innerHTML = `<i class="fa-solid fa-check"></i> ALERTS ACTIVE`;
+          browserBtn.style.borderColor = 'var(--accent-green)';
+        }
+        updateTriggerButtons(true);
+      } else if (Notification.permission === 'denied') {
+        if (browserStatus) {
+          browserStatus.style.display = 'block';
+          browserStatus.className = 'notify-status-msg error';
+          browserStatus.innerHTML = `<i class="fa-solid fa-xmark"></i> BLOCKED IN BROWSER SETTINGS`;
+        }
+      }
+    } else if (browserBtn) {
+      browserBtn.disabled = true;
+      browserBtn.textContent = 'NOT SUPPORTED ON THIS BROWSER';
+    }
+  }
+
+  function updateTriggerButtons(isSubscribed) {
+    if (isSubscribed) {
+      if (openBlogBtn) {
+        openBlogBtn.innerHTML = `<i class="fa-solid fa-check text-pixel-accent"></i> SUBSCRIBED`;
+      }
+      if (openHeaderBtn) {
+        openHeaderBtn.innerHTML = `<i class="fa-solid fa-check text-pixel-accent"></i> <span class="d-none d-sm-inline">SUBSCRIBED</span>`;
+      }
+    }
+  }
+
+  // 1. Email Subscription Submit
+  if (emailForm) {
+    emailForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = emailInput.value.trim();
+      if (!email) return;
+
+      localStorage.setItem('blog_subscribed_email', email);
+      showToast('SUBSCRIBED TO BLOG UPDATES!');
+      updateNotificationStates();
+    });
+  }
+
+  // 2. Browser Push Request
+  if (browserBtn) {
+    browserBtn.addEventListener('click', async () => {
+      if (!('Notification' in window)) {
+        showToast('BROWSER NOTIFICATIONS NOT SUPPORTED');
+        return;
+      }
+
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+          localStorage.setItem('blog_browser_notify', 'true');
+          showToast('BROWSER ALERTS ENABLED!');
+          
+          try {
+            new Notification('Denmar Valdez Blog Notifications', {
+              body: 'You will now receive alerts whenever a new article or essay is published.',
+              icon: 'favicon.ico'
+            });
+          } catch (err) {
+            console.log('Notification instantiated:', err);
+          }
+
+          updateNotificationStates();
+        } else if (permission === 'denied') {
+          showToast('NOTIFICATIONS BLOCKED IN BROWSER SETTINGS');
+          updateNotificationStates();
+        }
+      } catch (err) {
+        console.error('Error requesting notification permission:', err);
+      }
+    });
+  }
+
+  // 3. RSS Copy URL
+  if (copyRssBtn) {
+    copyRssBtn.addEventListener('click', () => {
+      const baseUrl = window.location.href.split('#')[0].split('?')[0];
+      const rssUrl = (baseUrl.endsWith('/') ? baseUrl : baseUrl + '/') + 'rss.xml';
+      
+      navigator.clipboard.writeText(rssUrl).then(() => {
+        showToast('RSS FEED URL COPIED!');
+        if (rssStatus) {
+          rssStatus.style.display = 'block';
+          rssStatus.className = 'notify-status-msg';
+          rssStatus.innerHTML = `<i class="fa-solid fa-check"></i> COPIED: ${rssUrl}`;
+        }
+      }).catch(() => {
+        showToast('RSS FEED: rss.xml');
+      });
+    });
+  }
+
+  updateNotificationStates();
+}
+
