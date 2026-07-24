@@ -1115,3 +1115,214 @@ button {
   font-size: 0.85rem;
 }
 
+/* ==========================================================================
+   14. Learning Journal Specific Styles
+   ========================================================================== */
+
+/* Journal Hero Stats Bar */
+.journal-stats-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin: 24px 0 36px 0;
+}
+
+.journal-stat-card {
+  background: var(--bg-card);
+  border: 2px solid var(--border-pixel-muted);
+  padding: 16px 20px;
+  box-shadow: 2px 2px 0px #000000;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.journal-stat-card:hover {
+  border-color: var(--border-pixel);
+  transform: translateY(-2px);
+}
+
+.journal-stat-value {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.journal-stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 4px;
+}
+
+/* Journal Filter Controls */
+.journal-controls-wrapper {
+  background: var(--bg-secondary);
+  border: 2px solid var(--border-pixel-muted);
+  padding: 20px;
+  margin-bottom: 32px;
+}
+
+.journal-search-input {
+  background: var(--bg-card);
+  border: 2px solid var(--border-pixel-muted);
+  color: var(--text-primary);
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  padding: 12px 16px;
+  width: 100%;
+  transition: border-color 0.2s ease;
+}
+
+.journal-search-input:focus {
+  outline: none;
+  border-color: var(--border-pixel);
+  box-shadow: var(--pixel-shadow-sm);
+}
+
+.journal-category-tabs {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.journal-filter-btn {
+  background: var(--bg-card);
+  border: 2px solid var(--border-pixel-muted);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-transform: uppercase;
+}
+
+.journal-filter-btn:hover {
+  border-color: var(--border-pixel);
+  color: var(--text-primary);
+}
+
+.journal-filter-btn.active {
+  background: var(--text-primary);
+  color: #000000;
+  border-color: var(--text-primary);
+  font-weight: 700;
+  box-shadow: 2px 2px 0px #000000;
+}
+
+/* Status Badges */
+.journal-status-badge {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 0px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.journal-status-badge.status-in-progress {
+  background: rgba(197, 160, 89, 0.15);
+  color: var(--accent-amber);
+  border: 1px solid var(--accent-amber);
+}
+
+.journal-status-badge.status-core-concept {
+  background: rgba(148, 163, 184, 0.15);
+  color: var(--accent-cyan);
+  border: 1px solid var(--accent-cyan);
+}
+
+.journal-status-badge.status-mastered {
+  background: rgba(134, 239, 172, 0.15);
+  color: var(--accent-green);
+  border: 1px solid var(--accent-green);
+}
+
+/* KaTeX Dark Theme Formatting Adjustments */
+.katex-display {
+  background: var(--bg-secondary);
+  border-left: 3px solid var(--text-primary);
+  padding: 16px;
+  overflow-x: auto;
+  margin: 20px 0 !important;
+}
+
+.katex {
+  font-size: 1.1em;
+  color: #ffffff;
+}
+
+/* Journal Markdown Content Styling in Modal */
+.journal-modal-body h1,
+.journal-modal-body h2,
+.journal-modal-body h3 {
+  font-family: var(--font-heading);
+  color: var(--text-primary);
+  margin-top: 24px;
+  margin-bottom: 12px;
+}
+
+.journal-modal-body h2 {
+  font-size: 1.3rem;
+  border-bottom: 1px dashed var(--border-pixel-muted);
+  padding-bottom: 8px;
+}
+
+.journal-modal-body p {
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  line-height: 1.7;
+}
+
+.journal-modal-body ul, 
+.journal-modal-body ol {
+  color: var(--text-secondary);
+  padding-left: 24px;
+  margin-bottom: 16px;
+}
+
+.journal-modal-body li {
+  margin-bottom: 6px;
+}
+
+.journal-modal-body hr {
+  border: 0;
+  border-top: 2px dashed var(--border-pixel-muted);
+  margin: 24px 0;
+}
+
+.journal-modal-body blockquote {
+  border-left: 3px solid var(--border-pixel);
+  background: var(--bg-card);
+  padding: 12px 16px;
+  margin: 16px 0;
+  font-style: italic;
+}
+
+/* Standalone Article Reader Page Wrapper */
+.journal-article-wrapper {
+  background: var(--bg-card);
+  border: 2px solid var(--border-pixel-muted);
+  box-shadow: 4px 4px 0px #000000;
+  padding: 36px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .journal-article-wrapper {
+    padding: 20px;
+  }
+}
+
+
+

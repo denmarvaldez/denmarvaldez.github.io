@@ -1,0 +1,24 @@
+[
+  {
+    "id": "linear-algebra-vectors-matrices",
+    "file": "notes/linear-algebra-vectors-matrices.md",
+    "title": "Linear Algebra: Vector Spaces, Transformations & Eigenvectors",
+    "category": "Linear Algebra",
+    "status": "Mastered",
+    "date": "July 24, 2026",
+    "readTime": "6 min read",
+    "tags": ["Linear Algebra", "Vectors", "Matrices", "Eigenvalues", "Math Foundations"],
+    "snippet": "Exploring vector spaces, matrix transformations as linear mappings, determinants, dot products, and the fundamental eigenvalue problem Ax = λx."
+  },
+  {
+    "id": "ml-gradient-descent-math",
+    "file": "notes/ml-gradient-descent-math.md",
+    "title": "Machine Learning: Calculus & Mathematics of Gradient Descent",
+    "category": "Machine Learning",
+    "status": "Core Concept",
+    "date": "July 22, 2026",
+    "readTime": "7 min read",
+    "tags": ["Machine Learning", "Optimization", "Gradient Descent", "Calculus", "Loss Functions"],
+    "snippet": "Deep dive into loss functions, partial derivatives, gradient vectors ∇L(θ), learning rates, and stochastic vs batch gradient descent."
+  }
+]

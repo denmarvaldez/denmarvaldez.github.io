@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Journal | Denmar Valdez • Machine Learning & Mathematics</title>
+
+  <!-- SEO Meta Tags -->
+  <meta name="description"
+    content="Personal Learning Journal of Denmar Valdez. Documenting Machine Learning, Deep Learning, Linear Algebra, Statistics, and Computer Science concepts.">
+  <meta name="author" content="Denmar Valdez">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Learning Journal | Denmar Valdez">
+  <meta property="og:description"
+    content="Interactive learning log & mathematics knowledge base for Machine Learning, Deep Learning, Linear Algebra, and Statistics.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://denmarvaldez.github.io/journal.html">
+
+  <!-- Bootstrap 5.3 Framework -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+
+  <!-- FontAwesome Retro Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- KaTeX CSS for LaTeX Math Formatting -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+  <!-- Retro CRT Scanline Overlay -->
+  <div class="scanlines"></div>
+
+  <!-- Header Navigation -->
+  <header class="header">
+    <div class="container header-container">
+      <a href="index.html#hero" class="logo" id="nav-logo">
+        <span class="logo-pixel-blink"></span> DENMAR.VALDEZ
+      </a>
+
+      <nav class="nav-menu" id="nav-menu">
+        <a href="index.html#hero" class="nav-link">MAIN</a>
+        <a href="index.html#projects" class="nav-link">WORKS</a>
+        <a href="index.html#blogs" class="nav-link">BLOGS</a>
+        <a href="journal.html" class="nav-link active">JOURNAL</a>
+        <a href="index.html#sanctum" class="nav-link">SANCTUM</a>
+        <a href="index.html#contact" class="nav-link">CONTACT</a>
+        <a href="index.html#contact" class="btn-pixel-primary d-lg-none mt-2" style="font-size: 0.85rem;">
+          <i class="fa-solid fa-terminal"></i> CONTACT
+        </a>
+      </nav>
+
+      <div class="header-actions">
+        <a href="https://drive.google.com/file/d/1zkQVpFr8ml7LrfEZCIOmK-PqjIBGD9Fh/view?usp=sharing" target="_blank"
+          rel="noopener noreferrer" class="btn-pixel-outline header-resume-btn">
+          <i class="fa-solid fa-file-pdf"></i> RESUME
+        </a>
+        <a href="index.html#contact" class="btn-pixel-primary d-none d-lg-inline-flex">
+          <i class="fa-solid fa-terminal"></i> CONTACT
+        </a>
+        <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="py-5 mt-4">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-12 col-lg-8">
+          <div class="hero-tag mb-2">
+            <i class="fa-solid fa-brain"></i> KNOWLEDGE BASE & LOGS
+          </div>
+          <h1 class="hero-title mb-3" style="font-size: 2.2rem;">
+            LEARNING <span class="text-pixel-accent">JOURNAL</span>
+          </h1>
+          <p class="hero-subtitle" style="max-width: 700px;">
+            Documenting my active deep dives into Machine Learning, Deep Learning architectures, Linear Algebra, Probability, and Statistics. Notes, formulas, and conceptual breakdowns.
+          </p>
+        </div>
+      </div>
+
+      <!-- Journal Metrics Bar -->
+      <div class="journal-stats-bar">
+        <div class="journal-stat-card">
+          <div class="journal-stat-value" id="stat-total-notes">0</div>
+          <div class="journal-stat-label"><i class="fa-solid fa-book"></i> Total Notes</div>
+        </div>
+        <div class="journal-stat-card">
+          <div class="journal-stat-value" id="stat-active-topics">0</div>
+          <div class="journal-stat-label"><i class="fa-solid fa-layer-group"></i> Active Topics</div>
+        </div>
+        <div class="journal-stat-card">
+          <div class="journal-stat-value" id="stat-mastered">0</div>
+          <div class="journal-stat-label"><i class="fa-solid fa-circle-check"></i> Mastered Concepts</div>
+        </div>
+      </div>
+
+      <!-- Controls Wrapper: Search & Category Tabs -->
+      <div class="journal-controls-wrapper">
+        <div class="row gy-3 align-items-center">
+          <div class="col-12 col-md-6">
+            <div class="position-relative">
+              <input type="text" id="journal-search" class="journal-search-input"
+                placeholder="Search notes, formulas, or tags (e.g. Eigenvectors, Gradient Descent)...">
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="journal-category-tabs justify-content-md-end" id="journal-categories">
+              <button class="journal-filter-btn active" data-category="ALL">ALL TOPICS</button>
+              <button class="journal-filter-btn" data-category="Machine Learning">ML</button>
+              <button class="journal-filter-btn" data-category="Deep Learning">DEEP LEARNING</button>
+              <button class="journal-filter-btn" data-category="Linear Algebra">MATH</button>
+              <button class="journal-filter-btn" data-category="Statistics">STATS</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Journal Cards Grid -->
+      <div class="row" id="journal-grid">
+        <!-- Rendered by journal.js -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer py-4" style="background: var(--bg-secondary); border-top: 2px solid var(--border-pixel-muted);">
+    <div class="container text-center">
+      <p style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-muted); margin: 0;">
+        &copy; 2026 DENMAR VALDEZ. PUSHING PIXEL BOULDERS & LEARNING ML.
+      </p>
+    </div>
+  </footer>
+
+  <!-- External Libraries & Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Marked.js for Markdown parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- KaTeX for LaTeX equations -->
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"></script>
+  
+  <script src="journal.js"></script>
+</body>
+
+</html>
