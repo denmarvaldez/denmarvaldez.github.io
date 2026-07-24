@@ -1119,6 +1119,12 @@ button {
    14. Learning Journal Specific Styles
    ========================================================================== */
 
+/* Journal Hero & Page Top Content Offset */
+.page-content-offset {
+  padding-top: calc(var(--header-height) + 40px) !important;
+  padding-bottom: 60px;
+}
+
 /* Journal Hero Stats Bar */
 .journal-stats-bar {
   display: grid;
