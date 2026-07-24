@@ -649,7 +649,7 @@ function initContactHub() {
       const email = document.getElementById('form-email').value;
       const message = document.getElementById('form-message').value;
 
-      const mailtoUrl = `mailto:${h.email}?subject=${encodeURIComponent('Portfolio Contract Request from ' + name)}&body=${encodeURIComponent(message + '\n\nFrom: ' + name + ' (' + email + ')')}`;
+      const mailtoUrl = `mailto:${h.email}?subject=${encodeURIComponent('Portfolio Inquiry from ' + name)}&body=${encodeURIComponent(message + '\n\nFrom: ' + name + ' (' + email + ')')}`;
       window.location.href = mailtoUrl;
 
       showToast('TRANSMITTING MESSAGE...');
